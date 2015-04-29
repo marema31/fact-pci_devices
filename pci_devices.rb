@@ -54,13 +54,16 @@ if !lspci.empty? and FileTest.exists?(lspci)
 
   # To create your own facts, edit the following code:
   raid_counter = 0
+  raidcontrollers=[]
   devices.each_key do |a|
     case devices[a].fetch("Class")
     when /^RAID/
       add_fact("raidcontroller#{raid_counter}_vendor", "#{devices[a].fetch('Vendor')}")
       add_fact("raidcontroller#{raid_counter}_driver", "#{devices[a].fetch('Driver')}")
       add_fact("raidcontroller#{raid_counter}_device", "#{devices[a].fetch('Device')}")
+      raidcontrollers.push(devices[a].fetch('Driver'))
       raid_counter += 1
     end
   end
+  add_fact("raidcontrollers",raidcontrollers)
 end
