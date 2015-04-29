@@ -55,6 +55,8 @@ if !lspci.empty? and FileTest.exists?(lspci)
   # To create your own facts, edit the following code:
   raid_counter = 0
   raidcontrollers=[]
+  vga_counter = 0
+  vgacards=[]
   devices.each_key do |a|
     case devices[a].fetch("Class")
     when /^RAID/
@@ -63,7 +65,18 @@ if !lspci.empty? and FileTest.exists?(lspci)
       add_fact("raidcontroller#{raid_counter}_device", "#{devices[a].fetch('Device')}")
       raidcontrollers.push(devices[a].fetch('Driver'))
       raid_counter += 1
+    when /^VGA/
+      add_fact("vgacard#{vga_counter}_vendor", "#{devices[a].fetch('Vendor')}")
+      add_fact("vgacard#{vga_counter}_device", "#{devices[a].fetch('Device')}")
+      if(devices[a].has_key?('Module'))
+        add_fact("vgacard#{vga_counter}_driver", "#{devices[a].fetch('Module')}")
+        vgacards.push(devices[a].fetch('Module'))
+      else
+        vgacards.push(devices[a].fetch('Device'))
+      end
+      vga_counter += 1
     end
   end
   add_fact("raidcontrollers",raidcontrollers)
+  add_fact("vgacards",vgacards)
 end
