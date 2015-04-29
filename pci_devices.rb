@@ -59,6 +59,7 @@ if !lspci.empty? and FileTest.exists?(lspci)
     when /^RAID/
       add_fact("raidcontroller#{raid_counter}_vendor", "#{devices[a].fetch('Vendor')}")
       add_fact("raidcontroller#{raid_counter}_driver", "#{devices[a].fetch('Driver')}")
+      add_fact("raidcontroller#{raid_counter}_device", "#{devices[a].fetch('Device')}")
       raid_counter += 1
     end
   end
